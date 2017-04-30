@@ -3,10 +3,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
-import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
-import moment from 'moment';
 import cx from 'classnames';
+import format from 'date-fns/format';
+import getMonth from 'date-fns/get_month';
+import isSameMonth from 'date-fns/is_same_month';
 
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -26,7 +27,7 @@ import {
 } from '../../constants';
 
 const propTypes = forbidExtraProps({
-  month: momentPropTypes.momentObj,
+  month: PropTypes.object,
   isVisible: PropTypes.bool,
   enableOutsideDays: PropTypes.bool,
   modifiers: PropTypes.object,
@@ -37,7 +38,7 @@ const propTypes = forbidExtraProps({
   onDayMouseLeave: PropTypes.func,
   renderDay: PropTypes.func,
 
-  focusedDate: momentPropTypes.momentObj, // indicates focusable day
+  focusedDate: PropTypes.object, // indicates focusable day
   isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
 
   // i18n
@@ -46,7 +47,7 @@ const propTypes = forbidExtraProps({
 });
 
 const defaultProps = {
-  month: moment(),
+  month: new Date(),
   isVisible: true,
   enableOutsideDays: false,
   modifiers: {},
@@ -75,7 +76,7 @@ export default class CalendarMonth extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { month, enableOutsideDays } = nextProps;
-    if (!month.isSame(this.props.month)) {
+    if (!isSameMonth(month, this.props.month)) {
       this.setState({
         weeks: getCalendarMonthWeeks(month, enableOutsideDays),
       });
@@ -104,7 +105,7 @@ export default class CalendarMonth extends React.Component {
     } = this.props;
 
     const { weeks } = this.state;
-    const monthTitle = month.format(monthFormat);
+    const monthTitle = format(month, monthFormat);
 
     const calendarMonthClasses = cx('CalendarMonth', {
       'CalendarMonth--horizontal': orientation === HORIZONTAL_ORIENTATION,
@@ -126,7 +127,7 @@ export default class CalendarMonth extends React.Component {
                   <CalendarDay
                     day={day}
                     daySize={daySize}
-                    isOutsideDay={!day || day.month() !== month.month()}
+                    isOutsideDay={!day || getMonth(day) !== getMonth(month)}
                     tabIndex={isVisible && isSameDay(day, focusedDate) ? 0 : -1}
                     isFocused={isFocused}
                     modifiers={modifiers}

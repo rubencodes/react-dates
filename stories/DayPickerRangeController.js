@@ -1,7 +1,9 @@
 import React from 'react';
-import moment from 'moment';
 import { storiesOf, action } from '@kadira/storybook';
-
+import addDays from 'date-fns/add_days';
+import addWeeks from 'date-fns/add_weeks';
+import format from 'date-fns/format';
+import isFriday from 'date-fns/is_friday';
 import isSameDay from '../src/utils/isSameDay';
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
 
@@ -88,14 +90,14 @@ const TestCustomInfoPanel = () => (
 );
 
 const datesList = [
-  moment(),
-  moment().add(1, 'days'),
-  moment().add(3, 'days'),
-  moment().add(9, 'days'),
-  moment().add(10, 'days'),
-  moment().add(11, 'days'),
-  moment().add(12, 'days'),
-  moment().add(13, 'days'),
+  new Date(),
+  addDays(new Date(), 1),
+  addDays(new Date(), 3),
+  addDays(new Date(), 9),
+  addDays(new Date(), 10),
+  addDays(new Date(), 11),
+  addDays(new Date(), 12),
+  addDays(new Date(), 13),
 ];
 
 storiesOf('DayPickerRangeController', module)
@@ -116,7 +118,7 @@ storiesOf('DayPickerRangeController', module)
     />
   ))
   .addWithInfo('non-english locale', () => {
-    moment.locale('zh-cn');
+    //TODO: moment.locale('zh-cn');
     return (
       <DayPickerRangeControllerWrapper
         onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
@@ -173,7 +175,7 @@ storiesOf('DayPickerRangeController', module)
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-      initialVisibleMonth={() => moment('04 2017', 'MM YYYY')}
+      initialVisibleMonth={() => parse('04/01/2017', { format: 'MM YYYY' })}
     />
   ))
   .addWithInfo('with minimum nights set', () => (
@@ -182,7 +184,7 @@ storiesOf('DayPickerRangeController', module)
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-      initialStartDate={moment().add(3, 'days')}
+      initialStartDate={addDays(new Date(), 3)}
       autoFocusEndDate
     />
   ))
@@ -192,7 +194,7 @@ storiesOf('DayPickerRangeController', module)
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-      initialStartDate={moment().add(3, 'days')}
+      initialStartDate={addDays(new Date(), 3)}
       autoFocusEndDate
     />
   ))
@@ -210,8 +212,8 @@ storiesOf('DayPickerRangeController', module)
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
       isOutsideRange={day =>
-        !isInclusivelyAfterDay(day, moment()) ||
-        isInclusivelyAfterDay(day, moment().add(2, 'weeks'))
+        !isInclusivelyAfterDay(day, new Date()) ||
+        isInclusivelyAfterDay(day, addWeeks(new Date(), 2))
       }
     />
   ))
@@ -236,7 +238,7 @@ storiesOf('DayPickerRangeController', module)
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-      isDayBlocked={day => moment.weekdays(day.weekday()) === 'Friday'}
+      isDayBlocked={day => isFriday(dat)}
     />
   ))
   .addWithInfo('with custom daily details', () => (
@@ -244,7 +246,7 @@ storiesOf('DayPickerRangeController', module)
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-      renderDay={day => day.format('ddd')}
+      renderDay={day => format(day, 'ddd')}
     />
   ))
   .addWithInfo('with info panel', () => (

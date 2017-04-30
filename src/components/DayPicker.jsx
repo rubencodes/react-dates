@@ -3,9 +3,23 @@ import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 import ReactDOM from 'react-dom';
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
-import moment from 'moment';
 import cx from 'classnames';
 import throttle from 'lodash.throttle';
+import format from 'date-fns/format';
+import isAfter from 'date-fns/is_after';
+import isBefore from 'date-fns/is_before';
+import isSameMonth from 'date-fns/is_same_month';
+import setDay from 'date-fns/set_day';
+import startOfMonth from 'date-fns/start_of_month';
+import endOfMonth from 'date-fns/end_of_month';
+import startOfWeek from 'date-fns/start_of_week';
+import endOfWeek from 'date-fns/end_of_week';
+import addMonths from 'date-fns/add_months';
+import addWeeks from 'date-fns/add_weeks';
+import addDays from 'date-fns/add_days';
+import subMonths from 'date-fns/sub_months';
+import subWeeks from 'date-fns/sub_weeks';
+import subDays from 'date-fns/sub_days';
 
 import { DayPickerPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -83,7 +97,7 @@ export const defaultProps = {
   withPortal: false,
   onOutsideClick() {},
   hidden: false,
-  initialVisibleMonth: () => moment(),
+  initialVisibleMonth: () => new Date(),
   renderCalendarInfo: null,
   hideKeyboardShortcutsPanel: false,
   daySize: DAY_SIZE,
@@ -170,9 +184,9 @@ export default class DayPicker extends React.Component {
   constructor(props) {
     super(props);
 
-    const currentMonth = props.hidden ? moment() : props.initialVisibleMonth();
+    const currentMonth = props.hidden ? new Date() : props.initialVisibleMonth();
 
-    let focusedDate = currentMonth.clone().startOf('month');
+    let focusedDate = startOfMonth(currentMonth);
     if (props.getFirstFocusableDay) {
       focusedDate = props.getFirstFocusableDay(currentMonth);
     }
@@ -263,7 +277,7 @@ export default class DayPicker extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { monthTransition, currentMonth, focusedDate } = this.state;
-    if (monthTransition || !currentMonth.isSame(prevState.currentMonth)) {
+    if (monthTransition || !isSameMonth(currentMonth, prevState.currentMonth)) {
       if (this.isHorizontal()) {
         this.adjustDayPickerHeight();
       }
@@ -286,7 +300,7 @@ export default class DayPicker extends React.Component {
     const { focusedDate, showKeyboardShortcuts } = this.state;
     if (!focusedDate) return;
 
-    const newFocusedDate = focusedDate.clone();
+    let newFocusedDate = focusedDate;
 
     let didTransitionMonth = false;
 
@@ -300,43 +314,43 @@ export default class DayPicker extends React.Component {
     switch (e.key) {
       case 'ArrowUp':
         e.preventDefault();
-        newFocusedDate.subtract(1, 'week');
+        newFocusedDate = subWeeks(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
         break;
       case 'ArrowLeft':
         e.preventDefault();
-        newFocusedDate.subtract(1, 'day');
+        newFocusedDate = subDays(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
         break;
       case 'Home':
         e.preventDefault();
-        newFocusedDate.startOf('week');
+        newFocusedDate = startOfWeek(newFocusedDate);
         didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
         break;
       case 'PageUp':
         e.preventDefault();
-        newFocusedDate.subtract(1, 'month');
+        newFocusedDate = subMonths(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
         break;
 
       case 'ArrowDown':
         e.preventDefault();
-        newFocusedDate.add(1, 'week');
+        newFocusedDate = addWeeks(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
         break;
       case 'ArrowRight':
         e.preventDefault();
-        newFocusedDate.add(1, 'day');
+        newFocusedDate = addDays(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
         break;
       case 'End':
         e.preventDefault();
-        newFocusedDate.endOf('week');
+        newFocusedDate = endOfWeek(newFocusedDate);
         didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
         break;
       case 'PageDown':
         e.preventDefault();
-        newFocusedDate.add(1, 'month');
+        newFocusedDate = addMonths(newFocusedDate, 1);
         didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
         break;
 
@@ -418,7 +432,7 @@ export default class DayPicker extends React.Component {
     }
 
     if (newMonth && (!focusedDate || !this.isDayVisible(focusedDate, newMonth))) {
-      focusedDate = newMonth.clone().startOf('month');
+      focusedDate = startOfMonth(newMonth);
     }
 
     return focusedDate;
@@ -467,10 +481,10 @@ export default class DayPicker extends React.Component {
     const { currentMonth } = this.state;
 
     const month = newMonth || currentMonth;
-    const firstDayOfFirstMonth = month.clone().startOf('month');
-    const lastDayOfLastMonth = month.clone().add(numberOfMonths - 1, 'months').endOf('month');
+    const firstDayOfFirstMonth = startOfMonth(month);
+    const lastDayOfLastMonth = endOfMonth(addMonths(month, numberOfMonths - 1));
 
-    return !day.isBefore(firstDayOfFirstMonth) && !day.isAfter(lastDayOfLastMonth);
+    return !isBefore(day, firstDayOfFirstMonth) && !isAfter(day, lastDayOfLastMonth);
   }
 
   isHorizontal() {
@@ -502,11 +516,11 @@ export default class DayPicker extends React.Component {
 
     if (!monthTransition) return;
 
-    const newMonth = currentMonth.clone();
+    let newMonth = currentMonth;
     if (monthTransition === PREV_TRANSITION) {
-      newMonth.subtract(1, 'month');
+      newMonth = subMonths(newMonth, 1);
     } else if (monthTransition === NEXT_TRANSITION) {
-      newMonth.add(1, 'month');
+      newMonth = addMonths(newMonth, 1);
     }
 
     let newFocusedDate = null;
@@ -643,7 +657,7 @@ export default class DayPicker extends React.Component {
     for (let i = 0; i < 7; i += 1) {
       header.push(
         <li key={i} style={{ width: daySize }}>
-          <small>{moment().weekday(i).format('dd')}</small>
+          <small>{format(setDay(new Date(), i), 'dd')}</small>
         </li>,
       );
     }

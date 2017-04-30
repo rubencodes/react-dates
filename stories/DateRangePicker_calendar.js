@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import parse from 'date-fns/parse';
 import { storiesOf } from '@kadira/storybook';
 
 import { VERTICAL_ORIENTATION, ANCHOR_RIGHT } from '../constants';
@@ -118,7 +118,7 @@ storiesOf('DRP - Calendar Props', module)
   ))
   .addWithInfo('with month specified on open', () => (
     <DateRangePickerWrapper
-      initialVisibleMonth={() => moment('04 2017', 'MM YYYY')}
+      initialVisibleMonth={() => parse('04/01/2017', { format: 'MM YYYY' })}
       autoFocus
     />
   ))

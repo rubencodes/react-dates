@@ -1,9 +1,7 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps } from 'airbnb-prop-types';
-import moment from 'moment';
 import omit from 'lodash.omit';
 
 import DayPickerRangeController from '../src/components/DayPickerRangeController';
@@ -17,8 +15,8 @@ import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
 const propTypes = forbidExtraProps({
   // example props for the demo
   autoFocusEndDate: PropTypes.bool,
-  initialStartDate: momentPropTypes.momentObj,
-  initialEndDate: momentPropTypes.momentObj,
+  initialStartDate: PropTypes.object,
+  initialEndDate: PropTypes.object,
 
   keepOpenOnDateSelect: PropTypes.bool,
   minimumNights: PropTypes.number,
@@ -56,7 +54,7 @@ const defaultProps = {
   renderDay: null,
   minimumNights: 1,
   isDayBlocked: () => false,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, moment()),
+  isOutsideRange: day => !isInclusivelyAfterDay(day, new Date()),
   isDayHighlighted: () => false,
   enableOutsideDays: false,
 
@@ -115,8 +113,8 @@ class DayPickerRangeControllerWrapper extends React.Component {
       'initialEndDate',
     ]);
 
-    const startDateString = startDate && startDate.format('YYYY-MM-DD');
-    const endDateString = endDate && endDate.format('YYYY-MM-DD');
+    const startDateString = startDate && format(startDate, 'YYYY-MM-DD');
+    const endDateString = endDate && format(endDate, 'YYYY-MM-DD');
 
     return (
       <div>

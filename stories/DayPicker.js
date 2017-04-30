@@ -92,7 +92,7 @@ storiesOf('DayPicker', module)
   ))
   .addWithInfo('with custom details', () => (
     <DayPicker
-      renderDay={day => (day.day() % 6 === 5 ? '😻' : day.format('D'))}
+      renderDay={day => (day.day() % 6 === 5 ? '😻' :format(day, 'D'))}
     />
   ))
   .addWithInfo('vertical with fixed-width container', () => (

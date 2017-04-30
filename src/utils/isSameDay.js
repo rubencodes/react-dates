@@ -1,10 +1,9 @@
-import moment from 'moment';
+import isDate from 'date-fns/is_date';
+import isSameDay from 'date-fns/is_same_day';
 
-export default function isSameDay(a, b) {
-  if (!moment.isMoment(a) || !moment.isMoment(b)) return false;
+export default function sameDay(a, b) {
+  if (!isDate(a) || !isDate(b)) return false;
   // Compare least significant, most likely to change units first
   // Moment's isSame clones moment inputs and is a tad slow
-  return a.date() === b.date() &&
-    a.month() === b.month() &&
-    a.year() === b.year();
+  return isSameDay(a, b);
 }

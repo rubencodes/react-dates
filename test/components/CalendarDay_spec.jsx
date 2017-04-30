@@ -1,8 +1,11 @@
 import React from 'react';
+import startOfMonth from 'date-fns/start_of_month';
+import endOfMonth from 'date-fns/end_of_month';
+import format from 'date-fns/format';
+
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
 import { shallow } from 'enzyme';
-import moment from 'moment';
 
 import CalendarDay, { getModifiersForDay } from '../../src/components/CalendarDay';
 
@@ -19,20 +22,20 @@ describe('CalendarDay', () => {
     });
 
     it('contains formatted day for single digit days', () => {
-      const firstOfMonth = moment().startOf('month');
+      const firstOfMonth = startOfMonth(new Date());
       const wrapper = shallow(<CalendarDay day={firstOfMonth} />);
-      expect(wrapper.text()).to.equal(firstOfMonth.format('D'));
+      expect(wrapper.text()).to.equal(format(firstOfMonth, 'D'));
     });
 
     it('contains formatted day for double digit days', () => {
-      const lastOfMonth = moment().endOf('month');
+      const lastOfMonth = endOfMonth(new Date());
       const wrapper = shallow(<CalendarDay day={lastOfMonth} />);
-      expect(wrapper.text()).to.equal(lastOfMonth.format('D'));
+      expect(wrapper.text()).to.equal(format(lastOfMonth, 'D'));
     });
 
     it('contains arbitrary content if renderDay is provided', () => {
-      const dayName = moment().format('dddd');
-      const renderDay = day => day.format('dddd');
+      const dayName = format(new Date(), 'dddd');
+      const renderDay = day => format(day, 'dddd');
       const wrapper = shallow(<CalendarDay renderDay={renderDay} />);
       expect(wrapper.text()).to.equal(dayName);
     });
@@ -138,7 +141,7 @@ describe('CalendarDay', () => {
       const modifiers = {};
       modifiers[modifierKey] = () => true;
 
-      const filteredModifiers = getModifiersForDay(modifiers, moment());
+      const filteredModifiers = getModifiersForDay(modifiers, new Date());
       expect(filteredModifiers).to.include(modifierKey);
     });
 
@@ -147,7 +150,7 @@ describe('CalendarDay', () => {
       const modifiers = {};
       modifiers[modifierKey] = () => false;
 
-      const filteredModifiers = getModifiersForDay(modifiers, moment());
+      const filteredModifiers = getModifiersForDay(modifiers, new Date());
       expect(filteredModifiers).not.to.include(modifierKey);
     });
   });

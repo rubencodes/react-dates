@@ -1,6 +1,9 @@
 import React from 'react';
+import addDays from 'date-fns/add_days';
+import format from 'date-fns/format';
+import startOfDay from 'date-fns/start_of_day';
+import setHours from 'date-fns/set_hours';
 import { expect } from 'chai';
-import moment from 'moment';
 import sinon from 'sinon-sandbox';
 import { shallow } from 'enzyme';
 
@@ -17,7 +20,7 @@ import {
 } from '../../constants';
 
 // Set to noon to mimic how days in the picker are configured internally
-const today = moment().startOf('day').hours(12);
+const today = setHours(startOfDay(new Date()), 12);
 
 describe('DateRangePickerInputController', () => {
   describe('#render', () => {
@@ -92,7 +95,7 @@ describe('DateRangePickerInputController', () => {
 
     it('calls props.onClose with startDate and endDate args', () => {
       const onCloseStub = sinon.stub();
-      const endDate = moment(today).add(1, 'days');
+      const endDate = addDays(today, 1);
 
       const wrapper = shallow(
         <DateRangePickerInputController
@@ -112,7 +115,7 @@ describe('DateRangePickerInputController', () => {
 
   describe('#onEndDateChange', () => {
     describe('is a valid end date', () => {
-      const validFutureDateString = moment(today).add(10, 'days').format('YYYY-MM-DD');
+      const validFutureDateString = format(addDays(today), 'YYYY-MM-DD');
       it('calls props.onDatesChange with correct arguments', () => {
         const onDatesChangeStub = sinon.stub();
         const wrapper =
@@ -121,8 +124,11 @@ describe('DateRangePickerInputController', () => {
         expect(onDatesChangeStub.callCount).to.equal(1);
 
         const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-        expect(onDatesChangeArgs.startDate).to.equal(wrapper.props().startDate);
-        expect(isSameDay(onDatesChangeArgs.endDate, moment(validFutureDateString))).to.equal(true);
+        const startDate = onDatesChangeArgs.startDate;
+        const endDate = onDatesChangeArgs.endDate;
+
+        expect(startDate).to.equal(wrapper.props().startDate);
+        expect(isSameDay(endDate, new Date(validFutureDateString))).to.equal(true);
       });
 
       describe('props.onFocusChange', () => {
@@ -146,7 +152,7 @@ describe('DateRangePickerInputController', () => {
 
     describe('matches custom display format', () => {
       const customFormat = 'MM[foobar]DD';
-      const customFormatDateString = moment(today).add(5, 'days').format(customFormat);
+      const customFormatDateString = format(addDays(today, 5), customFormat);
       it('calls props.onDatesChange with correct arguments', () => {
         const onDatesChangeStub = sinon.stub();
         const wrapper = shallow(
@@ -160,7 +166,7 @@ describe('DateRangePickerInputController', () => {
 
         const { startDate, endDate } = onDatesChangeStub.getCall(0).args[0];
         expect(startDate).to.equal(wrapper.instance().props.startDate);
-        expect(endDate.format(customFormat)).to.equal(customFormatDateString);
+        expect(format(endDate, customFormat)).to.equal(customFormatDateString);
       });
 
       describe('props.onFocusChange', () => {
@@ -224,8 +230,8 @@ describe('DateRangePickerInputController', () => {
     });
 
     describe('is outside range', () => {
-      const futureDate = moment().add(7, 'day').toISOString();
-      const isOutsideRange = day => day >= moment().add(3, 'day');
+      const futureDate = addDays(today, 7).toISOString();
+      const isOutsideRange = day => day >= addDays(today, 3);
 
       it('calls props.onDatesChange', () => {
         const onDatesChangeStub = sinon.stub();
@@ -268,7 +274,7 @@ describe('DateRangePickerInputController', () => {
     });
 
     describe('is inclusively before state.startDate', () => {
-      const startDate = moment(today).add(10, 'days');
+      const startDate = addDays(today, 10);
       const beforeStartDateString = today.toISOString();
       it('calls props.onDatesChange', () => {
         const onDatesChangeStub = sinon.stub();
@@ -312,9 +318,9 @@ describe('DateRangePickerInputController', () => {
 
   describe('#onStartDateChange', () => {
     describe('is a valid start date', () => {
-      const validFutureDateString = moment(today).add(5, 'days').format('YYYY-MM-DD');
+      const validFutureDateString = format(addDays(today, 5), 'YYYY-MM-DD');
       describe('is before props.endDate', () => {
-        const endDate = moment(today).add(10, 'days');
+        const endDate = addDays(today, 10);
         it('calls props.onDatesChange with correct arguments', () => {
           const onDatesChangeStub = sinon.stub();
           const wrapper = shallow(
@@ -324,7 +330,7 @@ describe('DateRangePickerInputController', () => {
           expect(onDatesChangeStub.callCount).to.equal(1);
 
           const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-          const futureDate = moment(validFutureDateString);
+          const futureDate = new Date(validFutureDateString);
           expect(isSameDay(onDatesChangeArgs.startDate, futureDate)).to.equal(true);
           expect(onDatesChangeArgs.endDate).to.equal(endDate);
         });
@@ -357,7 +363,7 @@ describe('DateRangePickerInputController', () => {
       });
 
       describe('is after props.endDate', () => {
-        const endDate = moment(today);
+        const endDate = new Date(today);
         it('calls props.onDatesChange with correct arguments', () => {
           const onDatesChangeStub = sinon.stub();
           const wrapper = shallow(
@@ -370,7 +376,7 @@ describe('DateRangePickerInputController', () => {
           expect(onDatesChangeStub.callCount).to.equal(1);
 
           const onDatesChangeArgs = onDatesChangeStub.getCall(0).args[0];
-          const futureDate = moment(validFutureDateString);
+          const futureDate = new Date(validFutureDateString);
           expect(isSameDay(onDatesChangeArgs.startDate, futureDate)).to.equal(true);
           expect(onDatesChangeArgs.endDate).to.equal(null);
         });
@@ -405,7 +411,7 @@ describe('DateRangePickerInputController', () => {
 
     describe('matches custom display format', () => {
       const customFormat = 'MM[foobar]DD';
-      const customFormatDateString = moment(today).add(5, 'days').format(customFormat);
+      const customFormatDateString = format(addDays(today, 5), customFormat);
       it('calls props.onDatesChange with correct arguments', () => {
         const onDatesChangeStub = sinon.stub();
         const wrapper = shallow(
@@ -418,7 +424,7 @@ describe('DateRangePickerInputController', () => {
         expect(onDatesChangeStub.callCount).to.equal(1);
 
         const { startDate, endDate } = onDatesChangeStub.getCall(0).args[0];
-        expect(startDate.format(customFormat)).to.equal(customFormatDateString);
+        expect(format(startDate, customFormat)).to.equal(customFormatDateString);
         expect(endDate).to.equal(wrapper.instance().props.endDate);
       });
 
@@ -484,8 +490,8 @@ describe('DateRangePickerInputController', () => {
     });
 
     describe('is outside range', () => {
-      const futureDate = moment().add(7, 'days').toISOString();
-      const isOutsideRange = day => day > moment().add(5, 'days');
+      const futureDate = addDays(new Date(), 7).toISOString();
+      const isOutsideRange = day => day > addDays(new Date(), 5);
 
       it('calls props.onDatesChange', () => {
         const onDatesChangeStub = sinon.stub();
@@ -572,7 +578,7 @@ describe('DateRangePickerInputController', () => {
         const onFocusChangeStub = sinon.stub();
         const wrapper = shallow(
           <DateRangePickerInputController
-            startDate={moment(today)}
+            startDate={new Date(today)}
             onFocusChange={onFocusChangeStub}
           />,
         );
@@ -602,7 +608,7 @@ describe('DateRangePickerInputController', () => {
         const onFocusChangeStub = sinon.stub();
         const wrapper = shallow(
           <DateRangePickerInputController
-            startDate={moment(today)}
+            startDate={new Date(today)}
             onFocusChange={onFocusChangeStub}
           />,
         );

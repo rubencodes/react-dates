@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import { storiesOf } from '@kadira/storybook';
 
 import SingleDatePickerWrapper from '../examples/SingleDatePickerWrapper';
@@ -33,7 +32,7 @@ storiesOf('SingleDatePicker (SDP)', module)
     </div>
    ))
   .addWithInfo('non-english locale (Chinese)', () => {
-    moment.locale('zh-cn');
+    //TODO: moment.locale('zh-cn');
     return (
       <SingleDatePickerWrapper
         placeholder="入住日期"

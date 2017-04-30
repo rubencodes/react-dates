@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import parse from 'date-fns/parse';
 import { storiesOf } from '@kadira/storybook';
 
 import SingleDatePickerWrapper from '../examples/SingleDatePickerWrapper';
@@ -95,7 +95,7 @@ storiesOf('SDP - Calendar Props', module)
   ))
   .addWithInfo('with month specified on open', () => (
     <SingleDatePickerWrapper
-      initialVisibleMonth={() => moment('01 2017', 'MM YYYY')}
+      initialVisibleMonth={() => parse('01/01/2017', { format: 'MM YYYY' })}
       autoFocus
     />
   ))

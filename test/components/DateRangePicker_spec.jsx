@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import addDays from 'date-fns/add_days';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
 import { shallow } from 'enzyme';
@@ -235,8 +235,8 @@ describe('DateRangePicker', () => {
     });
 
     it('calls props.onClose with startDate and endDate if props.focusedInput != null', () => {
-      const startDate = moment();
-      const endDate = startDate.add(1, 'days');
+      const startDate = new Date();
+      const endDate = addDays(startDate, 1);
       const onCloseStub = sinon.stub();
       const wrapper = shallow(
         <DateRangePicker
@@ -519,7 +519,7 @@ describe('DateRangePicker', () => {
 
     describe('initialVisibleMonth is not passed in', () => {
       it('DayPickerRangeController.props.initialVisibleMonth evaluates to startDate', () => {
-        const startDate = moment().add(10, 'days');
+        const startDate = addDays(new Date(), 10);
         const wrapper =
           shallow(<DateRangePicker focusedInput={START_DATE} startDate={startDate} />);
         const dayPicker = wrapper.find(DayPickerRangeController);
@@ -527,7 +527,7 @@ describe('DateRangePicker', () => {
       });
 
       it('DayPickerRangeController.props.initialVisibleMonth evaluates to endDate if !startDate', () => {
-        const endDate = moment().add(5, 'days');
+        const endDate = addDays(new Date(), 5);
         const wrapper =
           shallow(<DateRangePicker focusedInput={START_DATE} endDate={endDate} />);
         const dayPicker = wrapper.find(DayPickerRangeController);
@@ -535,7 +535,7 @@ describe('DateRangePicker', () => {
       });
 
       it('DayPickerRangeController.props.initialVisibleMonth evaluates to today if !startDate && !endDate', () => {
-        const today = moment();
+        const today = new Date();
         const wrapper =
           shallow(<DateRangePicker focusedInput={START_DATE} />);
         const dayPicker = wrapper.find(DayPickerRangeController);

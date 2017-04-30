@@ -1,12 +1,12 @@
-import moment from 'moment';
-
-import toMomentObject from './toMomentObject';
+import isDate from 'date-fns/is_date';
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
 
 import { DISPLAY_FORMAT } from '../../constants';
 
 export default function toLocalizedDateString(date, currentFormat) {
-  const dateObj = moment.isMoment(date) ? date : toMomentObject(date, currentFormat);
+  const dateObj = isDate(date) ? date : parse(date, { format: currentFormat });
   if (!dateObj) return null;
 
-  return dateObj.format(DISPLAY_FORMAT);
+  return format(dateObj, DISPLAY_FORMAT);
 }

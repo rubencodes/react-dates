@@ -1,10 +1,10 @@
-import moment from 'moment';
+import addDays from 'date-fns/add_days';
 import { expect } from 'chai';
 
 import isNextDay from '../../src/utils/isNextDay';
 
-const today = moment();
-const tomorrow = moment().add(1, 'days');
+const today = new Date();
+const tomorrow = addDays(today, 1);
 
 describe('isNextDay', () => {
   it('returns true if second argument is the next day after the first', () => {

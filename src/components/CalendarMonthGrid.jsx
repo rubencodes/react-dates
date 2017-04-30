@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import format from 'date-fns/format';
+import isAfter from 'date-fns/is_after';
+import addMonths from 'date-fns/add_months';
+import subMonths from 'date-fns/sub_months';
+import isSameMonth from 'date-fns/is_same_month';
+
 import shallowCompare from 'react-addons-shallow-compare';
-import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
-import moment from 'moment';
 import cx from 'classnames';
 import { addEventListener, removeEventListener } from 'consolidated-events';
 
@@ -28,7 +32,7 @@ import {
 const propTypes = forbidExtraProps({
   enableOutsideDays: PropTypes.bool,
   firstVisibleMonthIndex: PropTypes.number,
-  initialMonth: momentPropTypes.momentObj,
+  initialMonth: PropTypes.object,
   isAnimating: PropTypes.bool,
   numberOfMonths: PropTypes.number,
   modifiers: PropTypes.object,
@@ -40,7 +44,7 @@ const propTypes = forbidExtraProps({
   renderDay: PropTypes.func,
   transformValue: PropTypes.string,
   daySize: nonNegativeInteger,
-  focusedDate: momentPropTypes.momentObj, // indicates focusable day
+  focusedDate: PropTypes.object, // indicates focusable day
   isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
 
   // i18n
@@ -51,7 +55,7 @@ const propTypes = forbidExtraProps({
 const defaultProps = {
   enableOutsideDays: false,
   firstVisibleMonthIndex: 0,
-  initialMonth: moment(),
+  initialMonth: new Date(),
   isAnimating: false,
   numberOfMonths: 1,
   modifiers: {},
@@ -72,12 +76,12 @@ const defaultProps = {
 };
 
 function getMonths(initialMonth, numberOfMonths) {
-  let month = initialMonth.clone().subtract(1, 'month');
+  let month = subMonths(initialMonth, 1);
 
   const months = [];
   for (let i = 0; i < numberOfMonths + 2; i += 1) {
     months.push(month);
-    month = month.clone().add(1, 'month');
+    month = addMonths(month, 1);
   }
 
   return months;
@@ -106,17 +110,17 @@ export default class CalendarMonthGrid extends React.Component {
     const { initialMonth, numberOfMonths } = nextProps;
     const { months } = this.state;
 
-    const hasMonthChanged = !this.props.initialMonth.isSame(initialMonth, 'month');
+    const hasMonthChanged = !isSameMonth(this.props.initialMonth, initialMonth);
     const hasNumberOfMonthsChanged = this.props.numberOfMonths !== numberOfMonths;
     let newMonths = months;
 
     if (hasMonthChanged && !hasNumberOfMonthsChanged) {
-      if (initialMonth.isAfter(this.props.initialMonth)) {
+      if (isAfter(initialMonth, this.props.initialMonth)) {
         newMonths = months.slice(1);
-        newMonths.push(months[months.length - 1].clone().add(1, 'month'));
+        newMonths.push(addMonths(months[months.length - 1], 1));
       } else {
         newMonths = months.slice(0, months.length - 1);
-        newMonths.unshift(months[0].clone().subtract(1, 'month'));
+        newMonths.unshift(subMonths(months[0], 1));
       }
     }
 
@@ -207,7 +211,7 @@ export default class CalendarMonthGrid extends React.Component {
             (i >= firstVisibleMonthIndex) && (i < firstVisibleMonthIndex + numberOfMonths);
           return (
             <CalendarMonth
-              key={month.format('YYYY-MM')}
+              key={format(month, 'YYYY-MM')}
               month={month}
               isVisible={isVisible}
               enableOutsideDays={enableOutsideDays}

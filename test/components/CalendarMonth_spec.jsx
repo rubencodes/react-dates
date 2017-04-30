@@ -1,7 +1,7 @@
 import React from 'react';
+import format from 'date-fns/format';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import moment from 'moment';
 
 import { HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION } from '../../constants';
 import CalendarMonth from '../../src/components/CalendarMonth';
@@ -51,9 +51,9 @@ describe('CalendarMonth', () => {
       });
 
       it('text is the correctly formatted month title', () => {
-        const MONTH = moment();
+        const MONTH = new Date();
         const caption = shallow(<CalendarMonth month={MONTH} />).find('caption');
-        expect(caption.text()).to.equal(MONTH.format('MMMM YYYY'));
+        expect(caption.text()).to.equal(format(MONTH, 'MMMM YYYY'));
       });
     });
 

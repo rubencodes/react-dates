@@ -1,7 +1,7 @@
 import React from 'react';
+import format from 'date-fns/format';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import moment from 'moment';
 
 import CalendarMonth from '../../src/components/CalendarMonth';
 import CalendarMonthGrid from '../../src/components/CalendarMonthGrid';
@@ -54,7 +54,7 @@ describe('CalendarMonthGrid', () => {
   });
 
   it('does not generate duplicate months', () => {
-    const initialMonth = moment();
+    const initialMonth = new Date();
     const wrapper = shallow(<CalendarMonthGrid numberOfMonths={12} initialMonth={initialMonth} />);
 
     wrapper.instance().componentWillReceiveProps({
@@ -65,7 +65,7 @@ describe('CalendarMonthGrid', () => {
     const months = wrapper.state().months;
 
     const collisions = months
-      .map(m => m.format('YYYY-MM'))
+      .map(m => format(m, 'YYYY-MM'))
       .reduce((acc, m) => Object.assign(
         {},
         acc,
@@ -76,7 +76,7 @@ describe('CalendarMonthGrid', () => {
   });
 
   it('works with the same number of months', () => {
-    const initialMonth = moment();
+    const initialMonth = new Date();
     const wrapper = shallow(<CalendarMonthGrid numberOfMonths={12} initialMonth={initialMonth} />);
 
     wrapper.instance().componentWillReceiveProps({
@@ -88,7 +88,7 @@ describe('CalendarMonthGrid', () => {
     const months = wrapper.state().months;
 
     const collisions = months
-      .map(m => m.format('YYYY-MM'))
+      .map(m => format(m, 'YYYY-MM'))
       .reduce((acc, m) => Object.assign(
         {},
         acc,

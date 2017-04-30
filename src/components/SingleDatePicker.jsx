@@ -1,15 +1,20 @@
 import React from 'react';
-import moment from 'moment';
 import cx from 'classnames';
 import Portal from 'react-portal';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import { addEventListener, removeEventListener } from 'consolidated-events';
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
+import addDays from 'date-fns/add_days';
+import addMonths from 'date-fns/add_months';
+import isAfter from 'date-fns/is_after';
+import endOfMonth from 'date-fns/end_of_month';
+import startOfMonth from 'date-fns/start_of_month';
 
 import SingleDatePickerShape from '../shapes/SingleDatePickerShape';
 import { SingleDatePickerPhrases } from '../defaultPhrases';
 
 import OutsideClickHandler from './OutsideClickHandler';
-import toMomentObject from '../utils/toMomentObject';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
 import toISODateString from '../utils/toISODateString';
 import getResponsiveContainerStyles from '../utils/getResponsiveContainerStyles';
@@ -73,11 +78,11 @@ const defaultProps = {
   renderDay: null,
   enableOutsideDays: false,
   isDayBlocked: () => false,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, moment()),
+  isOutsideRange: day => !isInclusivelyAfterDay(day, new Date()),
   isDayHighlighted: () => {},
 
   // internationalization props
-  displayFormat: () => moment.localeData().longDateFormat('L'),
+  displayFormat: () => 'MM/DD/YYYY', //TODO: fix this: moment.localeData().longDateFormat('L')
   monthFormat: 'MMMM YYYY',
   phrases: SingleDatePickerPhrases,
 };
@@ -92,7 +97,7 @@ export default class SingleDatePicker extends React.Component {
       isInputFocused: false,
     };
 
-    this.today = moment();
+    this.today = new Date();
     this.isTouchDevice = false;
 
     this.onDayMouseEnter = this.onDayMouseEnter.bind(this);
@@ -132,7 +137,7 @@ export default class SingleDatePicker extends React.Component {
   }
 
   componentWillUpdate() {
-    this.today = moment();
+    this.today = new Date();
   }
 
   componentDidUpdate(prevProps) {
@@ -155,7 +160,7 @@ export default class SingleDatePicker extends React.Component {
       onFocusChange,
       onClose,
     } = this.props;
-    const endDate = toMomentObject(dateString, this.getDisplayFormat());
+    const endDate = parse(dateString, { format: this.getDisplayFormat() });
 
     const isValid = endDate && !isOutsideRange(endDate);
     if (isValid) {
@@ -245,7 +250,7 @@ export default class SingleDatePicker extends React.Component {
   getDateString(date) {
     const displayFormat = this.getDisplayFormat();
     if (date && displayFormat) {
-      return date && date.format(displayFormat);
+      return date && format(date, displayFormat);
     }
     return toLocalizedDateString(date);
   }
@@ -275,21 +280,21 @@ export default class SingleDatePicker extends React.Component {
   getFirstFocusableDay(newMonth) {
     const { date, numberOfMonths } = this.props;
 
-    let focusedDate = newMonth.clone().startOf('month');
+    let focusedDate = startOfMonth(newMonth);
     if (date) {
-      focusedDate = date.clone();
+      focusedDate = date;
     }
 
     if (this.isBlocked(focusedDate)) {
       const days = [];
-      const lastVisibleDay = newMonth.clone().add(numberOfMonths - 1, 'months').endOf('month');
-      let currentDay = focusedDate.clone();
-      while (!currentDay.isAfter(lastVisibleDay)) {
-        currentDay = currentDay.clone().add(1, 'day');
+      const lastVisibleDay = endOfMonth(addMonths(newMonth, numberOfMonths - 1));
+      let currentDay = focusedDate;
+      while (!isAfter(currentDay, lastVisibleDay)) {
+        currentDay = addDays(currentDay, 1);
         days.push(currentDay);
       }
 
-      const viableDays = days.filter(day => !this.isBlocked(day) && day.isAfter(focusedDate));
+      const viableDays = days.filter(day => !this.isBlocked(day) && isAfter(day, focusedDate));
       if (viableDays.length > 0) focusedDate = viableDays[0];
     }
 
@@ -412,7 +417,7 @@ export default class SingleDatePicker extends React.Component {
     };
 
     const onOutsideClick = (!withFullScreenPortal && withPortal) ? this.onClearFocus : undefined;
-    const initialVisibleMonthThunk = initialVisibleMonth || (() => (date || moment()));
+    const initialVisibleMonthThunk = initialVisibleMonth || (() => (date || new Date()));
     const closeIcon = customCloseIcon || (<CloseButton />);
 
     return (

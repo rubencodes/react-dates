@@ -1,10 +1,10 @@
-import moment from 'moment';
+import addDays from 'date-fns/add_days';
 import { expect } from 'chai';
 
 import isInclusivelyAfterDay from '../../src/utils/isInclusivelyAfterDay';
 
-const today = moment();
-const tomorrow = moment().add(1, 'days');
+const today = new Date();
+const tomorrow = addDays(today, 1);
 
 describe('isInclusivelyAfterDay', () => {
   it('returns true if first argument is after the second', () => {

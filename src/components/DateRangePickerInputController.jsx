@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import parse from 'date-fns/parse';
+import format from 'date-fns/format';
 
-import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps } from 'airbnb-prop-types';
 
 import { DateRangePickerInputPhrases } from '../defaultPhrases';
@@ -10,7 +10,6 @@ import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import DateRangePickerInput from './DateRangePickerInput';
 
-import toMomentObject from '../utils/toMomentObject';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
 import toISODateString from '../utils/toISODateString';
 
@@ -20,12 +19,12 @@ import isInclusivelyBeforeDay from '../utils/isInclusivelyBeforeDay';
 import { START_DATE, END_DATE } from '../../constants';
 
 const propTypes = forbidExtraProps({
-  startDate: momentPropTypes.momentObj,
+  startDate: PropTypes.object,
   startDateId: PropTypes.string,
   startDatePlaceholderText: PropTypes.string,
   isStartDateFocused: PropTypes.bool,
 
-  endDate: momentPropTypes.momentObj,
+  endDate: PropTypes.object,
   endDateId: PropTypes.string,
   endDatePlaceholderText: PropTypes.string,
   isEndDateFocused: PropTypes.bool,
@@ -81,8 +80,8 @@ const defaultProps = {
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDates: false,
   withFullScreenPortal: false,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, moment()),
-  displayFormat: () => moment.localeData().longDateFormat('L'),
+  isOutsideRange: day => !isInclusivelyAfterDay(day, new Date()),
+  displayFormat: () => 'MM/DD/YYYY', //TODO: fix this: moment.localeData().longDateFormat('L')
 
   onFocusChange() {},
   onClose() {},
@@ -128,7 +127,7 @@ export default class DateRangePickerInputController extends React.Component {
       onDatesChange,
     } = this.props;
 
-    const endDate = toMomentObject(endDateString, this.getDisplayFormat());
+    const endDate = parse(endDateString, { format: this.getDisplayFormat() });
 
     const isEndDateValid = endDate && !isOutsideRange(endDate) &&
       !isInclusivelyBeforeDay(endDate, startDate);
@@ -157,7 +156,7 @@ export default class DateRangePickerInputController extends React.Component {
   }
 
   onStartDateChange(startDateString) {
-    const startDate = toMomentObject(startDateString, this.getDisplayFormat());
+    const startDate = parse(startDateString, { format: this.getDisplayFormat() });
 
     let { endDate } = this.props;
     const { isOutsideRange, onDatesChange, onFocusChange } = this.props;
@@ -191,7 +190,7 @@ export default class DateRangePickerInputController extends React.Component {
   getDateString(date) {
     const displayFormat = this.getDisplayFormat();
     if (date && displayFormat) {
-      return date && date.format(displayFormat);
+      return date && format(date, displayFormat);
     }
     return toLocalizedDateString(date);
   }

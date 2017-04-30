@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import momentPropTypes from 'react-moment-proptypes';
-import moment from 'moment';
 import omit from 'lodash.omit';
 
 import DateRangePicker from '../src/components/DateRangePicker';
@@ -15,8 +13,8 @@ const propTypes = {
   // example props for the demo
   autoFocus: PropTypes.bool,
   autoFocusEndDate: PropTypes.bool,
-  initialStartDate: momentPropTypes.momentObj,
-  initialEndDate: momentPropTypes.momentObj,
+  initialStartDate: PropTypes.object,
+  initialEndDate: PropTypes.object,
 
   ...omit(DateRangePickerShape, [
     'startDate',
@@ -70,11 +68,11 @@ const defaultProps = {
   minimumNights: 1,
   enableOutsideDays: false,
   isDayBlocked: () => false,
-  isOutsideRange: day => !isInclusivelyAfterDay(day, moment()),
+  isOutsideRange: day => !isInclusivelyAfterDay(day, new Date()),
   isDayHighlighted: () => false,
 
   // internationalization
-  displayFormat: () => moment.localeData().longDateFormat('L'),
+  displayFormat: () => 'MM/DD/YYYY', //TODO: fix this: moment.localeData().longDateFormat('L')
   monthFormat: 'MMMM YYYY',
   phrases: DateRangePickerPhrases,
 };

@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { expect } from 'chai';
 
 import toLocalizedDateString from '../../src/utils/toLocalizedDateString';
@@ -10,11 +9,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Catalan locale', () => {
     before(() => {
-      moment.locale('ca');
+      //TODO: moment.locale('ca');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -40,11 +39,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Czech locale', () => {
     before(() => {
-      moment.locale('cs');
+      //TODO: moment.locale('cs');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13.07.1991');
     });
@@ -70,11 +69,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Danish locale', () => {
     before(() => {
-      moment.locale('da');
+      //TODO: moment.locale('da');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -100,11 +99,11 @@ describe('toLocalizedDateString', () => {
 
   describe('German locale', () => {
     before(() => {
-      moment.locale('de');
+      //TODO: moment.locale('de');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13.07.1991');
     });
@@ -130,11 +129,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Greek locale', () => {
     before(() => {
-      moment.locale('el');
+      //TODO: moment.locale('el');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -160,11 +159,11 @@ describe('toLocalizedDateString', () => {
 
   describe('British-English locale', () => {
     before(() => {
-      moment.locale('en-gb');
+      //TODO: moment.locale('en-gb');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -190,11 +189,11 @@ describe('toLocalizedDateString', () => {
 
   describe('American-English locale', () => {
     before(() => {
-      moment.locale('en');
+      //TODO: moment.locale('en');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('07/13/1991');
     });
@@ -220,11 +219,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Spanish locale', () => {
     before(() => {
-      moment.locale('es');
+      //TODO: moment.locale('es');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -250,11 +249,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Finnish locale', () => {
     before(() => {
-      moment.locale('fi');
+      //TODO: moment.locale('fi');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13.07.1991');
     });
@@ -280,11 +279,11 @@ describe('toLocalizedDateString', () => {
 
   describe('French locale', () => {
     before(() => {
-      moment.locale('fr');
+      //TODO: moment.locale('fr');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -310,11 +309,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Hungarian locale', () => {
     before(() => {
-      moment.locale('hu');
+      //TODO: moment.locale('hu');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('1991.07.13.');
     });
@@ -340,11 +339,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Indonesian locale', () => {
     before(() => {
-      moment.locale('id');
+      //TODO: moment.locale('id');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -370,11 +369,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Icelandic locale', () => {
     before(() => {
-      moment.locale('is');
+      //TODO: moment.locale('is');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13.07.1991');
     });
@@ -400,11 +399,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Italian locale', () => {
     before(() => {
-      moment.locale('it');
+      //TODO: moment.locale('it');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -430,11 +429,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Japanese locale', () => {
     before(() => {
-      moment.locale('ja');
+      //TODO: moment.locale('ja');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('1991/07/13');
     });
@@ -460,11 +459,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Korean locale', () => {
     before(() => {
-      moment.locale('ko');
+      //TODO: moment.locale('ko');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('1991.07.13');
     });
@@ -490,11 +489,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Malaysian locale', () => {
     before(() => {
-      moment.locale('ms-my');
+      //TODO: moment.locale('ms-my');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -520,11 +519,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Dutch locale', () => {
     before(() => {
-      moment.locale('nl');
+      //TODO: moment.locale('nl');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13-07-1991');
     });
@@ -550,11 +549,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Norwegian locale', () => {
     before(() => {
-      moment.locale('nb');
+      //TODO: moment.locale('nb');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13.07.1991');
     });
@@ -580,11 +579,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Polish locale', () => {
     before(() => {
-      moment.locale('pl');
+      //TODO: moment.locale('pl');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13.07.1991');
     });
@@ -610,11 +609,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Portuguese locale', () => {
     before(() => {
-      moment.locale('pt');
+      //TODO: moment.locale('pt');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13/07/1991');
     });
@@ -640,11 +639,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Russian locale', () => {
     before(() => {
-      moment.locale('ru');
+      //TODO: moment.locale('ru');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13.07.1991');
     });
@@ -670,11 +669,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Swedish locale', () => {
     before(() => {
-      moment.locale('sv');
+      //TODO: moment.locale('sv');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('1991-07-13');
     });
@@ -700,11 +699,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Thai locale', () => {
     before(() => {
-      moment.locale('th');
+      //TODO: moment.locale('th');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('1991/07/13');
     });
@@ -730,11 +729,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Turkish locale', () => {
     before(() => {
-      moment.locale('cs');
+      //TODO: moment.locale('cs');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('13.07.1991');
     });
@@ -760,11 +759,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Mainland Chinese locale', () => {
     before(() => {
-      moment.locale('zh-cn');
+      //TODO: moment.locale('zh-cn');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('1991-07-13');
     });
@@ -790,11 +789,11 @@ describe('toLocalizedDateString', () => {
 
   describe('Taiwanese Chinese locale', () => {
     before(() => {
-      moment.locale('zh-tw');
+      //TODO: moment.locale('zh-tw');
     });
 
     it('converts moment object to localized date string', () => {
-      const testDate = moment('1991-07-13');
+      const testDate = new Date('1991-07-13');
       const dateString = toLocalizedDateString(testDate);
       expect(dateString).to.equal('1991年7月13日');
     });

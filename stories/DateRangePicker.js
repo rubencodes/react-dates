@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import { storiesOf } from '@kadira/storybook';
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
@@ -64,7 +63,7 @@ storiesOf('DateRangePicker (DRP)', module)
     </div>
   ))
   .addWithInfo('non-english locale', () => {
-    moment.locale('zh-cn');
+    //TODO: moment.locale('zh-cn');
     return (
       <DateRangePickerWrapper
         showClearDates

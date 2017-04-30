@@ -1,8 +1,15 @@
 import React from 'react';
+import addDays from 'date-fns/add_days';
+import subDays from 'date-fns/sub_days';
+import subMonths from 'date-fns/sub_months';
+import setHours from 'date-fns/set_hours';
+import startOfDay from 'date-fns/start_of_day';
+import startOfMonth from 'date-fns/start_of_month';
+import endOfMonth from 'date-fns/end_of_month';
+import format from 'date-fns/format';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import sinon from 'sinon-sandbox';
-import moment from 'moment';
 import Portal from 'react-portal';
 
 import {
@@ -19,7 +26,7 @@ import SingleDatePicker from '../../src/components/SingleDatePicker';
 import isSameDay from '../../src/utils/isSameDay';
 
 // Set to noon to mimic how days in the picker are configured internally
-const today = moment().startOf('day').hours(12);
+const today = setHours(startOfDay(new Date()), 12);
 
 describe('SingleDatePicker', () => {
   afterEach(() => {
@@ -160,7 +167,7 @@ describe('SingleDatePicker', () => {
             />,
           );
           wrapper.setState({
-            hoverDate: moment(),
+            hoverDate: new Date(),
           });
           expect(wrapper.find('.SingleDatePicker__picker--valid-date-hovered')).to.have.lengthOf(1);
         });
@@ -296,7 +303,7 @@ describe('SingleDatePicker', () => {
 
   describe('#onChange', () => {
     describe('valid future date string', () => {
-      const futureDateString = moment().add(10, 'days').format('YYYY-MM-DD');
+      const futureDateString = format(addDays(new Date(), 10), 'YYYY-MM-DD');
       it('calls props.onDateChange once', () => {
         const onDateChangeStub = sinon.stub();
         const wrapper = shallow(
@@ -313,7 +320,7 @@ describe('SingleDatePicker', () => {
         );
         wrapper.instance().onChange(futureDateString);
         const newDate = onDateChangeStub.getCall(0).args[0];
-        expect(isSameDay(newDate, moment(futureDateString))).to.equal(true);
+        expect(isSameDay(newDate, new Date(futureDateString))).to.equal(true);
       });
 
       it('calls props.onFocusChange once', () => {
@@ -349,7 +356,7 @@ describe('SingleDatePicker', () => {
       });
 
       it('calls props.onClose with { startDate, endDate } as arg', () => {
-        const startDate = moment();
+        const startDate = new Date();
         const onCloseStub = sinon.stub();
         const wrapper = shallow(
           <SingleDatePicker
@@ -364,13 +371,13 @@ describe('SingleDatePicker', () => {
         expect(onCloseStub.getCall(0).args[0].startDate).to.equal(startDate);
 
         const newDate = onCloseStub.getCall(0).args[0].endDate;
-        expect(isSameDay(newDate, moment(futureDateString))).to.equal(true);
+        expect(isSameDay(newDate, new Date(futureDateString))).to.equal(true);
       });
     });
 
     describe('matches custom display format', () => {
       const customFormat = 'MM[foobar]DD';
-      const customFormatDateString = moment().add(5, 'days').format(customFormat);
+      const customFormatDateString = format(addDays(new Date(), 5), customFormat);
       it('calls props.onDateChange once', () => {
         const onDateChangeStub = sinon.stub();
         const wrapper = shallow(<SingleDatePicker
@@ -392,7 +399,7 @@ describe('SingleDatePicker', () => {
           onFocusChange={() => {}}
         />);
         wrapper.instance().onChange(customFormatDateString);
-        const formattedFirstArg = onDateChangeStub.getCall(0).args[0].format(customFormat);
+        const formattedFirstArg = format(onDateChangeStub.getCall(0).args[0], customFormat);
         expect(formattedFirstArg).to.equal(customFormatDateString);
       });
 
@@ -511,7 +518,7 @@ describe('SingleDatePicker', () => {
             isDayBlocked={() => true}
           />,
         );
-        wrapper.instance().onDayClick(moment());
+        wrapper.instance().onDayClick(new Date());
         expect(onDateChangeStub.callCount).to.equal(0);
       });
 
@@ -525,7 +532,7 @@ describe('SingleDatePicker', () => {
             isDayBlocked={() => true}
           />,
         );
-        wrapper.instance().onDayClick(moment());
+        wrapper.instance().onDayClick(new Date());
         expect(onFocusChangeStub.callCount).to.equal(0);
       });
 
@@ -540,13 +547,13 @@ describe('SingleDatePicker', () => {
             isDayBlocked={() => true}
           />,
         );
-        wrapper.instance().onDayClick(moment());
+        wrapper.instance().onDayClick(new Date());
         expect(onCloseStub.callCount).to.equal(0);
       });
 
       it('calls props.onClose with { startDate, endDate } as arg', () => {
-        const startDate = moment();
-        const endDate = moment().add(5, 'days');
+        const startDate = new Date();
+        const endDate = addDays(new Date(), 5);
         const onCloseStub = sinon.stub();
         const wrapper = shallow(
           <SingleDatePicker
@@ -571,7 +578,7 @@ describe('SingleDatePicker', () => {
         const wrapper = shallow(
           <SingleDatePicker id="date" onDateChange={onDateChangeStub} onFocusChange={() => {}} />,
         );
-        wrapper.instance().onDayClick(moment());
+        wrapper.instance().onDayClick(new Date());
         expect(onDateChangeStub.callCount).to.equal(1);
       });
 
@@ -580,7 +587,7 @@ describe('SingleDatePicker', () => {
         const wrapper = shallow(
           <SingleDatePicker id="date" onDateChange={() => {}} onFocusChange={onFocusChangeStub} />,
         );
-        wrapper.instance().onDayClick(moment());
+        wrapper.instance().onDayClick(new Date());
         expect(onFocusChangeStub.callCount).to.equal(1);
       });
 
@@ -594,7 +601,7 @@ describe('SingleDatePicker', () => {
             onClose={onCloseStub}
           />,
         );
-        wrapper.instance().onDayClick(moment());
+        wrapper.instance().onDayClick(new Date());
         expect(onCloseStub.callCount).to.equal(1);
       });
     });
@@ -845,12 +852,12 @@ describe('SingleDatePicker', () => {
         />,
       );
       const firstFocusableDay = wrapper.instance().getFirstFocusableDay(today);
-      expect(firstFocusableDay.isSame(today.clone().startOf('month'), 'day')).to.equal(true);
+      expect(isSameDay(firstFocusableDay, startOfMonth(today))).to.equal(true);
     });
 
     it('returns props.date if exists and is not blocked', () => {
       sinon.stub(SingleDatePicker.prototype, 'isBlocked').returns(false);
-      const date = today.clone().add(10, 'days');
+      const date = addDays(today, 10);
       const wrapper = shallow(
         <SingleDatePicker
           date={date}
@@ -867,7 +874,7 @@ describe('SingleDatePicker', () => {
         const isBlockedStub = sinon.stub(SingleDatePicker.prototype, 'isBlocked').returns(true);
         isBlockedStub.onCall(8).returns(false);
 
-        const date = moment().endOf('month').subtract(10, 'days');
+        const date = subDays(endOfMonth(new Date()), 10);
         const wrapper = shallow(
           <SingleDatePicker
             date={date}
@@ -876,7 +883,7 @@ describe('SingleDatePicker', () => {
           />,
         );
         const firstFocusableDay = wrapper.instance().getFirstFocusableDay(today);
-        expect(firstFocusableDay.isSame(date.clone().add(8, 'days'), 'day')).to.equal(true);
+        expect(isSameDay(firstFocusableDay, addDays(date, 8))).to.equal(true);
       });
     });
   });
@@ -985,7 +992,7 @@ describe('SingleDatePicker', () => {
       });
 
       it('returns false if day arg is not equal to state.hoverDate', () => {
-        const tomorrow = moment().add(1, 'days');
+        const tomorrow = addDays(new Date(), 1);
         const wrapper = shallow(
           <SingleDatePicker
             id="date"
@@ -1012,7 +1019,7 @@ describe('SingleDatePicker', () => {
       });
 
       it('returns false if day arg is not equal to props.date', () => {
-        const tomorrow = moment().add(1, 'days');
+        const tomorrow = addDays(new Date(), 1);
         const wrapper = shallow(
           <SingleDatePicker
             id="date"
@@ -1045,7 +1052,7 @@ describe('SingleDatePicker', () => {
             onFocusChange={() => {}}
           />,
         );
-        expect(wrapper.instance().isToday(moment(today).add(1, 'days'))).to.equal(false);
+        expect(wrapper.instance().isToday(addDays(today, 1))).to.equal(false);
       });
 
       it('returns false if last month', () => {
@@ -1056,7 +1063,7 @@ describe('SingleDatePicker', () => {
             onFocusChange={() => {}}
           />,
         );
-        expect(wrapper.instance().isToday(moment(today).subtract(1, 'months'))).to.equal(false);
+        expect(wrapper.instance().isToday(subMonths(today, 1))).to.equal(false);
       });
     });
   });
@@ -1081,7 +1088,7 @@ describe('SingleDatePicker', () => {
 
     describe('initialVisibleMonth is not passed in', () => {
       it('DayPicker.props.initialVisibleMonth evaluates to date', () => {
-        const date = moment().add(10, 'days');
+        const date = addDays(new Date(), 10);
         const wrapper = shallow(
           <SingleDatePicker
             id="date"
