@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { forbidExtraProps } from 'airbnb-prop-types';
 import cx from 'classnames';
 
 import { DateRangePickerInputPhrases } from '../defaultPhrases';
@@ -13,7 +12,7 @@ import CalendarIcon from '../svg/calendar.svg';
 
 import { START_DATE, END_DATE } from '../../constants';
 
-const propTypes = forbidExtraProps({
+const propTypes = {
   startDateId: PropTypes.string,
   startDatePlaceholderText: PropTypes.string,
   screenReaderMessage: PropTypes.string,
@@ -52,7 +51,7 @@ const propTypes = forbidExtraProps({
 
   // i18n
   phrases: PropTypes.shape(getPhrasePropTypes(DateRangePickerInputPhrases)),
-});
+};
 
 const defaultProps = {
   startDateId: START_DATE,

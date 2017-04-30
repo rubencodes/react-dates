@@ -3,7 +3,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
-import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
 import cx from 'classnames';
 import format from 'date-fns/format';
 import getMonth from 'date-fns/get_month';
@@ -26,13 +25,13 @@ import {
   DAY_SIZE,
 } from '../../constants';
 
-const propTypes = forbidExtraProps({
+const propTypes = {
   month: PropTypes.object,
   isVisible: PropTypes.bool,
   enableOutsideDays: PropTypes.bool,
   modifiers: PropTypes.object,
   orientation: ScrollableOrientationShape,
-  daySize: nonNegativeInteger,
+  daySize: PropTypes.number,
   onDayClick: PropTypes.func,
   onDayMouseEnter: PropTypes.func,
   onDayMouseLeave: PropTypes.func,
@@ -44,7 +43,7 @@ const propTypes = forbidExtraProps({
   // i18n
   monthFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(CalendarDayPhrases)),
-});
+};
 
 const defaultProps = {
   month: new Date(),

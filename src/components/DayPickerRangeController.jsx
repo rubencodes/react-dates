@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
 import isAfter from 'date-fns/is_after';
 import isBefore from 'date-fns/is_before';
 import isWithinRange from 'date-fns/is_within_range';
@@ -35,7 +34,7 @@ import {
 
 import DayPicker, { defaultProps as DayPickerDefaultProps } from './DayPicker';
 
-const propTypes = forbidExtraProps({
+const propTypes = {
   startDate: PropTypes.object,
   endDate: PropTypes.object,
   onDatesChange: PropTypes.func,
@@ -57,7 +56,7 @@ const propTypes = forbidExtraProps({
   withPortal: PropTypes.bool,
   initialVisibleMonth: PropTypes.func,
   hideKeyboardShortcutsPanel: PropTypes.bool,
-  daySize: nonNegativeInteger,
+  daySize: PropTypes.number,
 
   navPrev: PropTypes.node,
   navNext: PropTypes.node,
@@ -76,7 +75,7 @@ const propTypes = forbidExtraProps({
   // i18n
   monthFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerPhrases)),
-});
+};
 
 const defaultProps = {
   startDate: undefined, // TODO: use null

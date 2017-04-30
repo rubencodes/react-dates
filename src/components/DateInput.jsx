@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { forbidExtraProps } from 'airbnb-prop-types';
 import cx from 'classnames';
 import throttle from 'lodash.throttle';
 
 import isTouchDevice from '../utils/isTouchDevice';
 
-const propTypes = forbidExtraProps({
+const propTypes = {
   id: PropTypes.string.isRequired,
   placeholder: PropTypes.string, // also used as label
   displayValue: PropTypes.string,
@@ -27,7 +26,7 @@ const propTypes = forbidExtraProps({
 
   // accessibility
   isFocused: PropTypes.bool, // describes actual DOM focus
-});
+};
 
 const defaultProps = {
   placeholder: 'Select Date',

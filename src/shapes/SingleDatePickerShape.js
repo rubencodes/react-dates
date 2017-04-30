@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { nonNegativeInteger } from 'airbnb-prop-types';
 
 import { SingleDatePickerPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -36,7 +35,7 @@ export default {
   reopenPickerOnClearDate: PropTypes.bool,
   renderCalendarInfo: PropTypes.func,
   hideKeyboardShortcutsPanel: PropTypes.bool,
-  daySize: nonNegativeInteger,
+  daySize: PropTypes.number,
 
   // navigation related props
   navPrev: PropTypes.node,

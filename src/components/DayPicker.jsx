@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 import ReactDOM from 'react-dom';
-import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
 import cx from 'classnames';
 import throttle from 'lodash.throttle';
 import format from 'date-fns/format';
@@ -52,7 +51,7 @@ const DAY_PICKER_PADDING = 9;
 const PREV_TRANSITION = 'prev';
 const NEXT_TRANSITION = 'next';
 
-const propTypes = forbidExtraProps({
+const propTypes = {
   // calendar presentation props
   enableOutsideDays: PropTypes.bool,
   numberOfMonths: PropTypes.number,
@@ -63,7 +62,7 @@ const propTypes = forbidExtraProps({
   initialVisibleMonth: PropTypes.func,
   renderCalendarInfo: PropTypes.func,
   hideKeyboardShortcutsPanel: PropTypes.bool,
-  daySize: nonNegativeInteger,
+  daySize: PropTypes.number,
 
   // navigation props
   navPrev: PropTypes.node,
@@ -87,7 +86,7 @@ const propTypes = forbidExtraProps({
   // internationalization
   monthFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerPhrases)),
-});
+};
 
 export const defaultProps = {
   // calendar presentation props

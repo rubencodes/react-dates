@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import { forbidExtraProps } from 'airbnb-prop-types'; // TODO: add to propTypes; semver-major
 import { addEventListener, removeEventListener } from 'consolidated-events';
 
 const propTypes = {

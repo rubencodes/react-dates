@@ -7,7 +7,6 @@ import subMonths from 'date-fns/sub_months';
 import isSameMonth from 'date-fns/is_same_month';
 
 import shallowCompare from 'react-addons-shallow-compare';
-import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
 import cx from 'classnames';
 import { addEventListener, removeEventListener } from 'consolidated-events';
 
@@ -29,7 +28,7 @@ import {
   DAY_SIZE,
 } from '../../constants';
 
-const propTypes = forbidExtraProps({
+const propTypes = {
   enableOutsideDays: PropTypes.bool,
   firstVisibleMonthIndex: PropTypes.number,
   initialMonth: PropTypes.object,
@@ -43,14 +42,14 @@ const propTypes = forbidExtraProps({
   onMonthTransitionEnd: PropTypes.func,
   renderDay: PropTypes.func,
   transformValue: PropTypes.string,
-  daySize: nonNegativeInteger,
+  daySize: PropTypes.number,
   focusedDate: PropTypes.object, // indicates focusable day
   isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
 
   // i18n
   monthFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(CalendarDayPhrases)),
-});
+};
 
 const defaultProps = {
   enableOutsideDays: false,

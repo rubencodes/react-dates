@@ -1,7 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
 import Portal from 'react-portal';
-import { forbidExtraProps } from 'airbnb-prop-types';
 import { addEventListener, removeEventListener } from 'consolidated-events';
 import parse from 'date-fns/parse';
 import format from 'date-fns/format';
@@ -36,7 +35,7 @@ import {
   DAY_SIZE,
 } from '../../constants';
 
-const propTypes = forbidExtraProps(SingleDatePickerShape);
+const propTypes = SingleDatePickerShape;
 
 const defaultProps = {
   // required props for a functional interactive SingleDatePicker

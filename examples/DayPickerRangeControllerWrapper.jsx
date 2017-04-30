@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { forbidExtraProps } from 'airbnb-prop-types';
 import omit from 'lodash.omit';
 
 import DayPickerRangeController from '../src/components/DayPickerRangeController';
@@ -12,7 +11,7 @@ import ScrollableOrientationShape from '../src/shapes/ScrollableOrientationShape
 import { START_DATE, END_DATE, HORIZONTAL_ORIENTATION } from '../constants';
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
 
-const propTypes = forbidExtraProps({
+const propTypes = {
   // example props for the demo
   autoFocusEndDate: PropTypes.bool,
   initialStartDate: PropTypes.object,
@@ -42,7 +41,7 @@ const propTypes = forbidExtraProps({
 
   // i18n
   monthFormat: PropTypes.string,
-});
+};
 
 const defaultProps = {
   // example props for the demo
