@@ -5,6 +5,8 @@ import format from 'date-fns/format';
 import { ISO_FORMAT } from '../../constants';
 
 export default function toISODateString(date, currentFormat) {
+  if(!date) return null;
+  
   const dateObj = isDate(date) ? date : parse(date, { format: currentFormat });
   if (!dateObj) return null;
 
